@@ -1,0 +1,8 @@
+{
+  "app": {
+    "port": 5000
+  },
+  "mongoose": {
+    "uri": "mongodb://localhost/M_D"
+  }
+}
