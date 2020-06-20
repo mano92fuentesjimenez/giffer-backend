@@ -6,12 +6,14 @@
     "start": "node lib/index.js"
   },
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "config": "^3.3.1",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.12.0",
     "koa-joi-router": "^6.0.2",
     "lodash": "^4.17.15",
     "mongoose": "^5.9.19",
-    "require-dir": "^1.2.0"
+    "require-dir": "^1.2.0",
+    "superagent": "^5.2.2"
   }
 }

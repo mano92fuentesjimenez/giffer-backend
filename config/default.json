@@ -3,6 +3,9 @@
     "port": 5000
   },
   "mongoose": {
-    "uri": "mongodb://localhost/M_D"
+    "uri": "mongodb://localhost/giffer"
+  },
+  "giphy": {
+    "basePath": "https://api.giphy.com/v1"
   }
 }
