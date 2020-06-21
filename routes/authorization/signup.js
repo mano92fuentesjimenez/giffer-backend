@@ -10,14 +10,20 @@ module.exports = {
     body: {
       name: Joi.string().required(),
       password: Joi.string().required(),
-      email: Joi.string().email(),
+      email: Joi.string().email().required(),
     }
   },
   handler: async function (ctx) {
-    const { name } = ctx.request.body;
+    const { name, email } = ctx.request.body;
 
-    const user = await Users.findOne({ name });
-    ctx.assert(!user, 409, "User already exists");
+    const [userName, userFromEmail] = await Promise.all([
+      Users.findOne({ name }),
+      Users.findOne({ email })
+    ]) ;
+
+    ctx.assert(!userName, 409, "User already exists");
+    ctx.assert(!userFromEmail, 409, "Email already taken");
+
     const signedUser = await Users.create({ ...ctx.request.body});
 
     ctx.body = await sign(signedUser);
