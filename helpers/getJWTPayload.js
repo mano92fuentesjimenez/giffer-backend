@@ -1,3 +1,3 @@
 module.exports = function(user){
-  return { ...user.toJSON() };
+  return { ...user.sanitize() };
 };

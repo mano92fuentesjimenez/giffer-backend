@@ -4,7 +4,7 @@ const { sign } = require('../../helpers/JWTMethods');
 
 module.exports = {
   path: '/log-in',
-  method: 'get',
+  method: 'post',
   validate: {
     type: 'json',
     body: {
@@ -13,12 +13,16 @@ module.exports = {
     }
   },
   handler: async function (ctx) {
-    const { name, password } = ctx.request.body;
+    const { name, password, email } = ctx.request.body;
 
-    const user = await Users.findOne({ name });
-    const samePassword = await user.checkPassword(password);
-
+    const [userByName, userByEmail] = await Promise.all([
+      Users.findOne({ name }),
+      Users.findOne({ email: name }),
+    ])
+    const user = userByName || userByEmail;
     ctx.assert(user, 404, "User not found");
+
+    const samePassword = await user.checkPassword(password);
     ctx.assert(samePassword, 403, "Incorrect password supplied");
 
     ctx.body = await sign(user);

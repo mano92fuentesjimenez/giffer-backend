@@ -1,4 +1,4 @@
 
 module.exports = function applyIndexes(userSchem) {
-  userSchem.index({ name: 1 })
+  userSchem.index({ email: 1 })
 };
