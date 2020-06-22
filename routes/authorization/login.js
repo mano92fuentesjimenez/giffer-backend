@@ -16,9 +16,10 @@ module.exports = {
     const { name, password } = ctx.request.body;
 
     const user = await Users.findOne({ name });
+    const samePassword = await user.checkPassword(password);
 
     ctx.assert(user, 404, "User not found");
-    ctx.assert(user.checkPassword(password), 403, "Incorrect password supplied");
+    ctx.assert(samePassword, 403, "Incorrect password supplied");
 
     ctx.body = await sign(user);
     ctx.status = 200;

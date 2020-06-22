@@ -1,6 +1,7 @@
 const Joi = require('koa-joi-router').Joi;
 const { Users } = require('../../models');
 const { sign } = require('../../helpers/JWTMethods');
+const { hash } = require('../../helpers/bcryptMethods');
 
 module.exports = {
   path: '/sign-up',
@@ -14,7 +15,7 @@ module.exports = {
     }
   },
   handler: async function (ctx) {
-    const { name, email } = ctx.request.body;
+    const { name, email, password } = ctx.request.body;
 
     const [userName, userFromEmail] = await Promise.all([
       Users.findOne({ name }),
@@ -24,7 +25,12 @@ module.exports = {
     ctx.assert(!userName, 409, "User already exists");
     ctx.assert(!userFromEmail, 409, "Email already taken");
 
-    const signedUser = await Users.create({ ...ctx.request.body});
+    const hashedPassword = await hash(password);
+
+    const signedUser = await Users.create({
+      ...ctx.request.body,
+      password: hashedPassword,
+    });
 
     ctx.body = await sign(signedUser);
     ctx.status = 201;
