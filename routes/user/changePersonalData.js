@@ -29,6 +29,16 @@ module.exports = {
       if (changes.password)
         changes.password = await hash(changes.password);
 
+      if (changes.name) {
+        const userFromName = await Users.findOne({ name: changes.name });
+        ctx.assert(!userFromName, 409, "User already exists");
+      }
+
+      if (changes.email) {
+        const userFromEmail = await Users.findOne({ email: changes.email });
+        ctx.assert(!userFromEmail, 409, "Email already taken");
+      }
+
       await userDoc.update(changes);
       ctx.body = await sign(
         await Users.findById(id),
