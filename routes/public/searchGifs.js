@@ -1,5 +1,6 @@
 const Joi = require('koa-joi-router').Joi;
-const giphyRequest = require('../../helpers/giphyRequest');
+const giphyGetData = require('../../middlewares/giphyGetData');
+const checkAuthenticated = require('../../middlewares/checkAuthenticated');
 
 const path = '/gifs/search';
 
@@ -11,13 +12,14 @@ module.exports = {
       offset: Joi.number().required(),
       limit: Joi.number().required(),
       q: Joi.string().required(),
+      token: Joi.string(),
     }
   },
-  handler: async function (ctx, next) {
-    const { query } = ctx.request;
-
-    ctx.body = await giphyRequest(path, query);
-    ctx.status = 200;
-    next()
-  }
+  handler: [
+    checkAuthenticated(false),
+    giphyGetData(path),
+    function (ctx) {
+      ctx.body = ctx.state.giphyResultData;
+    },
+  ]
 };

@@ -1,12 +1,25 @@
-const logger = require('../lib/getLogger');
 const { verify } = require('../helpers/JWTMethods');
 
-const checkAuthenticated = async (ctx, next) => {
-  const { token } = ctx.request.body;
-  ctx.state.user = await verify(token).catch((e) => {
-    logger.log(e);
+const checkAuthenticated = (throwIfNotAuthenticated = true) => async (ctx, next) => {
+  const { query, body } = ctx.request;
 
-    ctx.throw(401, 'Unauthorized');
+  let token;
+
+  if(query && query.token)
+    token = query.token;
+  if(body && body.token)
+    token = body.token;
+
+  if(!token) {
+    if(throwIfNotAuthenticated)
+      return ctx.throw(401, 'Unauthorized');
+    return next();
+  }
+
+  ctx.state.user = await verify(token).catch(() => {
+    if(throwIfNotAuthenticated)
+      return ctx.throw(401, 'Unauthorized');
+    return next();
   });
   return next();
 }

@@ -4,6 +4,7 @@ const Joi = require('koa-joi-router').Joi;
 const { Users } = require('../../models');
 const { sign } = require('../../helpers/JWTMethods');
 const { hash } = require('../../helpers/bcryptMethods');
+const { contentRating } = require('../../models/user/constants');
 
 module.exports = {
   path: '/user',
@@ -14,11 +15,12 @@ module.exports = {
       name: Joi.string(),
       password: Joi.string(),
       email: Joi.string().email(),
+      contentRating: Joi.string().valid(...contentRating),
       token: Joi.string().required(),
     }
   },
   handler: [
-    checkAuthenticated,
+    checkAuthenticated(true),
     async function (ctx) {
       const changes = {
         ...lodash.omit(ctx.request.body, ['token']),
