@@ -19,8 +19,8 @@ module.exports = {
   },
   verify: function (token) {
     return new Promise( async (resolve, reject) => {
-      const { privateKey } = await keys;
-      jsonWebToken.verify(token, privateKey, { algorithms: [algorithm]},function(err, payload){
+      const { publicKey } = await keys;
+      jsonWebToken.verify(token, publicKey, { algorithms: [algorithm]},function(err, payload){
         if (err)
           return reject(err);
         resolve(payload);
