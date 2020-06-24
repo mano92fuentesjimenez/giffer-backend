@@ -2,7 +2,7 @@ const checkAuthenticated = require('../../middlewares/checkAuthenticated');
 const Joi = require('koa-joi-router').Joi;
 
 module.exports = {
-  path: '/user/toggleFavoriteGif',
+  path: '/gifs/toggleFavoriteGif',
   method: 'post',
   validate: {
     type: 'json',
