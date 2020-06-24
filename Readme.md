@@ -21,7 +21,9 @@ Project structure:
    * models -- contains the mongoose model definitions as schema, indexes and methods for documents
    * routes -- contains all the routes of the project
  
-For used technologies: Please see package.json 
+For used technologies: Please see package.json
 
 For run, just do ```yarn``` and later ```yarn start```
+
+If run with ```yarn start```, it needs a mongodb instance running on port 27017, if you need to change how is connected to mongodb you can rewrite /config/default.json , the configuration for mongodb connection is gotten from there
  
