@@ -4,7 +4,7 @@ const Joi = require('koa-joi-router').Joi;
 const { Users } = require('../../models');
 const { sign } = require('../../helpers/JWTMethods');
 const { hash } = require('../../helpers/bcryptMethods');
-const { contentRating } = require('../../models/user/constants');
+const { contentRating, languages } = require('../../models/user/constants');
 
 module.exports = {
   path: '/user',
@@ -16,6 +16,7 @@ module.exports = {
       password: Joi.string(),
       email: Joi.string().email(),
       contentRating: Joi.string().valid(...contentRating),
+      language: Joi.string().valid(...languages),
       token: Joi.string().required(),
     }
   },
