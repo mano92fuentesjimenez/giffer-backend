@@ -1,4 +1,5 @@
 const { verify } = require('../helpers/JWTMethods');
+const { Users } = require('../models');
 
 const checkAuthenticated = (throwIfNotAuthenticated = true) => async (ctx, next) => {
   const { query, body } = ctx.request;
@@ -16,11 +17,12 @@ const checkAuthenticated = (throwIfNotAuthenticated = true) => async (ctx, next)
     return next();
   }
 
-  ctx.state.user = await verify(token).catch(() => {
+  const user = await verify(token).catch(() => {
     if(throwIfNotAuthenticated)
       return ctx.throw(401, 'Unauthorized');
     return next();
   });
+  ctx.state.user = await Users.findById(user.id);
   return next();
 }
 

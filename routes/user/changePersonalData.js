@@ -26,8 +26,7 @@ module.exports = {
       const changes = {
         ...lodash.omit(ctx.request.body, ['token']),
       };
-      const { id } = ctx.state.user;
-      const userDoc = await Users.findById(id);
+      const userDoc = ctx.state.user;
 
       if (changes.password)
         changes.password = await hash(changes.password);
@@ -44,7 +43,7 @@ module.exports = {
 
       await userDoc.update(changes);
       ctx.body = await sign(
-        await Users.findById(id),
+        await Users.findById(userDoc.id),
       );
     }
   ]

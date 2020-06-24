@@ -1,6 +1,5 @@
 const checkAuthenticated = require('../../middlewares/checkAuthenticated');
 const Joi = require('koa-joi-router').Joi;
-const { Users } = require('../../models');
 
 module.exports = {
   path: '/user/remove',
@@ -12,10 +11,9 @@ module.exports = {
     }
   },
   handler: [
-    checkAuthenticated,
+    checkAuthenticated(true),
     async function (ctx) {
-      const { id } = ctx.state.user;
-      const userDoc = await Users.findById(id);
+      const userDoc = ctx.state.user;
 
       await userDoc.remove()
       ctx.status = 200;
